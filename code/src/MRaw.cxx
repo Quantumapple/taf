@@ -16106,26 +16106,30 @@ void MRaw::SitrineoAnalysis( Int_t lastPlaneOfFirstTracker, Int_t &nPairs, track
   nPairs = 0;
   for( Int_t iTrack=1; iTrack<=tTracker->GetTracksN(); iTrack++) { // loop on 1st tracks // recup t from 1st tracker
     track1 = (DTrack*)tTracker->GetTrack( iTrack);
-    int plane1 = track1->GetHit(0)->GetPlane()->GetPlaneNumber();
+    int plane1 = track1->GetHit(1)->GetPlane()->GetPlaneNumber();
     slope1 = track1->GetLinearFit().GetSlopeZ();
 
     for( Int_t jTrack=iTrack+1; jTrack<=tTracker->GetTracksN(); jTrack++) { // loop on 2nd tracks
       track2 = (DTrack*)tTracker->GetTrack( jTrack);
-      int plane2 = track2->GetHit(0)->GetPlane()->GetPlaneNumber(); 
-      if( plane2 < plane1){     
-	cout << "First Track " << plane1 << endl ;  
-        cout << "Second Track " << plane2 << endl ;    
+      int plane2 = track2->GetHit(0)->GetPlane()->GetPlaneNumber();
+ 
+      if( plane2 < plane1 && plane2 == 2 && plane1 == 3 ){
+	cout << "##################" << endl;
+	cout << "### First Plane Track " << plane1  << " ### "<< endl ;  
+        cout << "### Second Plane Track " << plane2 << " ### " << endl ;    
       	slope2 = track2->GetLinearFit().GetSlopeZ();
-
       	pairList[nPairs].firstTrackID = iTrack;
       	pairList[nPairs].secondTrackID = jTrack;
       	pairList[nPairs].slope1 = slope1(0);
       	pairList[nPairs].slope2 = slope2(0);
-      	double angle = acos( ( (pairList[nPairs].slope2)*(pairList[nPairs].slope1) + 1 )/(sqrt(1+pow(pairList[nPairs].slope2,2) ) * sqrt(1+pow(pairList[nPairs].slope2,2) ) ) ) ;
-	cout << " Angle : " << angle << endl ;
+      	double angle = acos( ( (pairList[nPairs].slope2)*(pairList[nPairs].slope1) + 1 )/(sqrt(1+pow(pairList[nPairs].slope2,2) ) * sqrt(1+pow(pairList[nPairs].slope1,2) ) ) ) ;
+	cout << "### Angle : " << angle << " ###" <<endl ;
 	double momentum = 0.3*0.2*20/angle ;
 	pairList[nPairs].momentumXY = momentum ;
-	cout << " Momentum : " << momentum << endl ;
+	cout << "### Momentum : " << momentum <<" ###" << endl ;
+	cout << "##################" << endl;
+	cout << endl ;
+
       	nPairs++;
       }
     } // end loop on 2nd tracks
