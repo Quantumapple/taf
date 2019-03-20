@@ -51,6 +51,11 @@ To copy the software
 - use the command: . Script/tarTAF
 - it creates a ttaf_new.tar.gzip with all what you need to export elsewhere
 
+Compile from copied software
+- cd code
+- make clean
+- make -j 4
+
 *********************************************************************************************************
 Master - 2018/10/17
 *********************************************************************************************************
