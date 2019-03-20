@@ -16108,29 +16108,35 @@ void MRaw::SitrineoAnalysis( Int_t lastPlaneOfFirstTracker, Int_t &nPairs, track
     track1 = (DTrack*)tTracker->GetTrack( iTrack);
     int plane1 = track1->GetHit(1)->GetPlane()->GetPlaneNumber();
     slope1 = track1->GetLinearFit().GetSlopeZ();
-
-    for( Int_t jTrack=iTrack+1; jTrack<=tTracker->GetTracksN(); jTrack++) { // loop on 2nd tracks
-      track2 = (DTrack*)tTracker->GetTrack( jTrack);
-      int plane2 = track2->GetHit(0)->GetPlane()->GetPlaneNumber();
- 
-      if( plane2 < plane1 && plane2 == 2 && plane1 == 3 ){
-	cout << "##################" << endl;
-	cout << "### First Plane Track " << plane1  << " ### "<< endl ;  
-        cout << "### Second Plane Track " << plane2 << " ### " << endl ;    
-      	slope2 = track2->GetLinearFit().GetSlopeZ();
-      	pairList[nPairs].firstTrackID = iTrack;
-      	pairList[nPairs].secondTrackID = jTrack;
-      	pairList[nPairs].slope1 = slope1(0);
-      	pairList[nPairs].slope2 = slope2(0);
-      	double angle = acos( ( (pairList[nPairs].slope2)*(pairList[nPairs].slope1) + 1 )/(sqrt(1+pow(pairList[nPairs].slope2,2) ) * sqrt(1+pow(pairList[nPairs].slope1,2) ) ) ) ;
-	cout << "### Angle : " << angle << " ###" <<endl ;
-	double momentum = 0.3*0.2*20/angle ;
-	pairList[nPairs].momentumXY = momentum ;
-	cout << "### Momentum : " << momentum <<" ###" << endl ;
-	cout << "##################" << endl;
-	cout << endl ;
-
-      	nPairs++;
+    cout << endl ;
+    cout << " First loop plane " << endl ;
+    cout << " ==> First Hit : " << track1->GetHit(0)->GetPlane()->GetPlaneNumber() << " : ( " << track1->GetHit(0)->GetPositionUhit() << " ; " << track1->GetHit(0)->GetPositionVhit() << " ; " << track1->GetHit(0)->GetPositionWhit() << " ) " <<  endl ;
+    cout << " ==> Second Hit : " <<  plane1 << " : ( " << track1->GetHit(1)->GetPositionUhit() << " ; " << track1->GetHit(1)->GetPositionVhit() << " ; " << track1->GetHit(1)->GetPositionWhit() << " ) " <<  endl ;
+    for( Int_t jTrack=1; jTrack<=tTracker->GetTracksN(); jTrack++) { // loop on 2nd tracks
+      if( jTrack != iTrack ){
+      		track2 = (DTrack*)tTracker->GetTrack( jTrack);
+      		int plane2 = track2->GetHit(0)->GetPlane()->GetPlaneNumber();
+      		cout << " Second loop plane " << endl ;
+      		cout << " ==> First Hit : " << plane2 << " : ( " << track2->GetHit(0)->GetPositionUhit() << " ; " << track2->GetHit(0)->GetPositionVhit() << " ; " << track2->GetHit(0)->GetPositionWhit() << " ) " <<  endl ;
+      		cout << " ==> Second Hit : " <<  track2->GetHit(1)->GetPlane()->GetPlaneNumber() << " : ( " << track2->GetHit(1)->GetPositionUhit() << " ; " << track2->GetHit(1)->GetPositionVhit() << " ; " << track2->GetHit(1)->GetPositionWhit() << " ) " <<  endl ;
+      		if( plane2 < plane1 ){
+			cout << "##################" << endl;
+			cout << "###  First Plane Track " << plane1  << " ### "<< endl ;  
+      			cout << "###  Second Plane Track " << plane2 << " ### " << endl ;    
+      			slope2 = track2->GetLinearFit().GetSlopeZ();
+      			pairList[nPairs].firstTrackID = iTrack;
+      			pairList[nPairs].secondTrackID = jTrack;
+      			pairList[nPairs].slope1 = slope1(0);
+      			pairList[nPairs].slope2 = slope2(0);
+      			double angle = acos( ( (pairList[nPairs].slope2)*(pairList[nPairs].slope1) + 1 )/( sqrt(1+pow(pairList[nPairs].slope2,2) ) * sqrt(1+pow(pairList[nPairs].slope1,2) ) ) ) ;
+			cout << "###  Angle : " << angle << " ###" <<endl ;
+			double momentum = 0.3*0.2*20/angle ;
+			pairList[nPairs].momentumXY = momentum ;
+			cout << "###  Momentum : " << momentum <<" ###" << endl ;
+			cout << "##################" << endl;
+			cout << endl ;
+      			nPairs++;
+		}
       }
     } // end loop on 2nd tracks
 
